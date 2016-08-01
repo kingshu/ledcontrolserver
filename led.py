@@ -55,11 +55,17 @@ class myHandler(BaseHTTPRequestHandler):
             elif rPath[1] == "flicker":
                 flicker.flicker(pi)
                 resp = {'SUCCESS':'FLICKERED'}
-                turnon()
+		if POWER:
+                    turnon()
+                else:
+                    turnoff()
             elif rPath[1] == "pulse":
                 flicker.pulse(pi, CURR_LED_STATE)
                 resp = {'SUCCESS':'PULSED'}
-                turnon()
+                if POWER:               
+                    turnon()
+                else:
+                    turnoff()
             elif rPath[1] == "turnonifdark":
                 if suncycle.isDarkOutside():
                     turnon()
@@ -96,19 +102,6 @@ def turnon():
     pi.set_PWM_dutycycle(PIN_BLU, CURR_LED_STATE['blue'])
     POWER = True;   
 
-
-def tunonfifsunset():
-
-    url = "http://api.wunderground.com/api/a74dcd0087397208/astronomy/q/WA/Seattle.json"
-    req = requests.get(url)
-    if int(req.status_code) == 200:
-        resp = json.loads(req.content)
-        currtime = time.ctime()
-        hr_local = (int(currtime[11]+currtime[12])-7) % 24
-        hr = str(hr_local)
-        if hr_local < 10:
-            hr = "0"+hr
-        mm = currtime[14]+currtime[15]
 
 def validRGB(rgbList):
     if len(rgbList) != 5:
