@@ -2,19 +2,19 @@ import requests
 import json
 import time
 
+LATITUDE = "47.608419"
+LONGITUDE = "-122.327904"
+
 def isDarkOutside():
     sunset = getSunsetEpoch()
     sunrise = getSunriseEpoch()
     if not sunset or not sunrise:
         return True # err on side of darkness
     now = getCurrentEpoch()
-    print "Now:     "+str(now)
-    print "Sunset:  "+str(sunset)
-    print "Sunrise: "+str(sunrise)
     return now > sunset and now < sunrise
 
 def getSunsetEpoch():
-    url_today = "http://api.sunrise-sunset.org/json?lat=47.608419&lng=-122.327904&date=today"
+    url_today = "http://api.sunrise-sunset.org/json?lat="+LATITUDE+"&lng="+LONGITUDE+"&date=today"
     r = requests.get(url_today)
     if int(r.status_code) == 200:
         resp = json.loads(r.content)
@@ -23,7 +23,7 @@ def getSunsetEpoch():
         return False
 
 def getSunriseEpoch():
-    url_tomorrow = "http://api.sunrise-sunset.org/json?lat=47.608419&lng=-122.327904&date=tomorrow"
+    url_tomorrow = "http://api.sunrise-sunset.org/json?lat="+LATITUDE+"&lng="+LONGITUDE+"&date=tomorrow"
     r = requests.get(url_tomorrow)
     if int(r.status_code) == 200:
         resp = json.loads(r.content)
