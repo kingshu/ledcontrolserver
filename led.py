@@ -4,11 +4,12 @@ import json
 import requests
 import suncycle
 import flicker
+import music
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 
 PIN_RED = 24
 PIN_GRN = 25
-PIN_BLU = 14
+PIN_BLU = 18
 
 PORT_NUMBER = 8080
 pi = pigpio.pi()
@@ -72,7 +73,7 @@ class myHandler(BaseHTTPRequestHandler):
                     resp = CURR_LED_STATE;
                     resp['SUCCESS'] = 'TURNED ON'
                 else:
-                    resp ={'SUCCESS':'NOT DARK YET'}
+                    resp = {'SUCCESS':'NOT DARK YET'}
             else:
                 resp = {'ERROR': 'UNKNOWN ENDPOINT'}
         except IndexError:
