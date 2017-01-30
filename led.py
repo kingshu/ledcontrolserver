@@ -4,7 +4,6 @@ import json
 import requests
 import suncycle
 import flicker
-import music
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 
 PIN_RED = 24
