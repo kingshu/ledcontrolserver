@@ -4,6 +4,7 @@ import json
 import requests
 import suncycle
 import flicker
+import color
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 
 PIN_RED = 24
@@ -44,14 +45,12 @@ class myHandler(BaseHTTPRequestHandler):
                 resp = CURR_LED_STATE;
                 resp['SUCCESS'] = 'TURNED ON'
             elif rPath[1] == "setstate":
-                if validRGB(rPath):
-                    CURR_LED_STATE = {'red':rPath[2], 'green':rPath[3], 'blue':rPath[4], 'power':'on'}
-                    pi.set_PWM_dutycycle(PIN_RED, int(rPath[2]))
-                    pi.set_PWM_dutycycle(PIN_GRN, int(rPath[3]))
-                    pi.set_PWM_dutycycle(PIN_BLU, int(rPath[4]))
-                    resp = CURR_LED_STATE
-                else:
-                    resp = {'ERROR': 'BAD VALUES FOR RGB'}
+                resp = color.setColor(rPath)
+                if 'ERROR' not in resp:
+                    CURR_LED_STATE = resp
+                    pi.set_PWM_dutycycle(PIN_RED, CURR_LED_STATE['red'])
+                    pi.set_PWM_dutycycle(PIN_GRN, CURR_LED_STATE['green'])
+                    pi.set_PWM_dutycycle(PIN_BLU, CURR_LED_STATE['blue'])
             elif rPath[1] == "flicker":
                 flicker.flicker(pi)
                 resp = {'SUCCESS':'FLICKERED'}
@@ -100,16 +99,7 @@ def turnon():
     pi.set_PWM_dutycycle(PIN_RED, CURR_LED_STATE['red'])
     pi.set_PWM_dutycycle(PIN_GRN, CURR_LED_STATE['green'])
     pi.set_PWM_dutycycle(PIN_BLU, CURR_LED_STATE['blue'])
-    POWER = True;   
-
-
-def validRGB(rgbList):
-    if len(rgbList) != 5:
-        return False
-    for i in range(2, len(rgbList)-1):
-        if int(rgbList[i])<0 or int(rgbList[i])>255:
-            return False;
-    return True;
+    POWER = True;
 
 try:
     turnoff()
