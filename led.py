@@ -18,7 +18,11 @@ CURR_LED_STATE = {'red':0, 'green':0, 'blue':0}
 POWER = False;
 
 class myHandler(BaseHTTPRequestHandler):
-    
+
+    def setup(self):
+        BaseHTTPRequestHandler.setup(self)
+        self.request.settimeout(60)
+
     def do_GET(self):
         
         global pi
